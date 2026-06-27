@@ -1,0 +1,283 @@
+{
+  "version": 4,
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+    {
+      "name": "win-base",
+      "hidden": true,
+      "inherits": "base",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name": "win-vs-base",
+      "hidden": true,
+      "inherits": "win-base",
+      "generator": "Visual Studio 17 2022"
+    },
+    {
+      "name": "win-vs-msvc",
+      "displayName": "Windows VS MSVC",
+      "inherits": "win-vs-base",
+      "toolset": "v143"
+    },
+    {
+      "name": "win-vs-clang-cl",
+      "displayName": "Windows VS ClangCL",
+      "inherits": "win-vs-base",
+      "toolset": "ClangCL"
+    },
+    {
+      "name": "win-ninja-base",
+      "hidden": true,
+      "inherits": "win-base",
+      "generator": "Ninja"
+    },
+    {
+      "name": "win-ninja-clang-cl-base",
+      "hidden": true,
+      "inherits": "win-ninja-base",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang-cl",
+        "CMAKE_CXX_COMPILER": "clang-cl",
+        "CMAKE_ASM_MASM_COMPILER": "llvm-ml64"
+      }
+    },
+    {
+      "name": "win-ninja-clang-cl-debug",
+      "displayName": "Windows Ninja ClangCL Debug",
+      "inherits": "win-ninja-clang-cl-base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "win-ninja-clang-cl-release",
+      "displayName": "Windows Ninja ClangCL Release",
+      "inherits": "win-ninja-clang-cl-base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "linux-base",
+      "hidden": true,
+      "inherits": "base",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "name": "linux-ninja-base",
+      "hidden": true,
+      "inherits": "linux-base",
+      "generator": "Ninja"
+    },
+    {
+      "name": "linux-ninja-gcc-debug",
+      "displayName": "Linux Ninja GCC Debug",
+      "inherits": "linux-ninja-base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "linux-ninja-gcc-release",
+      "displayName": "Linux Ninja GCC Release",
+      "inherits": "linux-ninja-base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "linux-ninja-clang-base",
+      "hidden": true,
+      "inherits": "linux-ninja-base",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++"
+      }
+    },
+    {
+      "name": "linux-ninja-clang-debug",
+      "displayName": "Linux Ninja Clang Debug",
+      "inherits": "linux-ninja-clang-base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "linux-ninja-clang-release",
+      "displayName": "Linux Ninja Clang Release",
+      "inherits": "linux-ninja-clang-base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "mac-base",
+      "hidden": true,
+      "inherits": "base",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      }
+    },
+    {
+      "name": "mac-xcode-clang",
+      "displayName": "Mac Xcode Clang",
+      "inherits": "mac-base",
+      "generator": "Xcode"
+    },
+    {
+      "name": "mac-ninja-clang-debug",
+      "displayName": "Mac Ninja Clang Debug",
+      "inherits": "mac-base",
+      "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "mac-ninja-clang-release",
+      "displayName": "Mac Ninja Clang Release",
+      "inherits": "mac-base",
+      "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "win-build-base",
+      "hidden": true,
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name": "win-vs-msvc-debug",
+      "displayName": "Windows VS MSVC Debug",
+      "inherits": "win-build-base",
+      "configurePreset": "win-vs-msvc",
+      "configuration": "Debug"
+    },
+    {
+      "name": "win-vs-msvc-release",
+      "displayName": "Windows VS MSVC Release",
+      "inherits": "win-build-base",
+      "configurePreset": "win-vs-msvc",
+      "configuration": "Release"
+    },
+    {
+      "name": "win-vs-clang-cl-debug",
+      "displayName": "Windows VS ClangCL Debug",
+      "inherits": "win-build-base",
+      "configurePreset": "win-vs-clang-cl",
+      "configuration": "Debug"
+    },
+    {
+      "name": "win-vs-clang-cl-release",
+      "displayName": "Windows VS ClangCL Release",
+      "inherits": "win-build-base",
+      "configurePreset": "win-vs-clang-cl",
+      "configuration": "Release"
+    },
+    {
+      "name": "win-ninja-clang-cl-debug",
+      "displayName": "Windows Ninja ClangCL Debug",
+      "inherits": "win-build-base",
+      "configurePreset": "win-ninja-clang-cl-debug"
+    },
+    {
+      "name": "win-ninja-clang-cl-release",
+      "displayName": "Windows Ninja ClangCL Release",
+      "inherits": "win-build-base",
+      "configurePreset": "win-ninja-clang-cl-release"
+    },
+    {
+      "name": "linux-build-base",
+      "hidden": true,
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "name": "linux-ninja-gcc-debug",
+      "displayName": "Linux Ninja GCC Debug",
+      "inherits": "linux-build-base",
+      "configurePreset": "linux-ninja-gcc-debug"
+    },
+    {
+      "name": "linux-ninja-gcc-release",
+      "displayName": "Linux Ninja GCC Release",
+      "inherits": "linux-build-base",
+      "configurePreset": "linux-ninja-gcc-release"
+    },
+    {
+      "name": "linux-ninja-clang-debug",
+      "displayName": "Linux Ninja Clang Debug",
+      "inherits": "linux-build-base",
+      "configurePreset": "linux-ninja-clang-debug"
+    },
+    {
+      "name": "linux-ninja-clang-release",
+      "displayName": "Linux Ninja Clang Release",
+      "inherits": "linux-build-base",
+      "configurePreset": "linux-ninja-clang-release"
+    },
+    {
+      "name": "mac-build-base",
+      "hidden": true,
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      }
+    },
+    {
+      "name": "mac-xcode-clang-debug",
+      "displayName": "Mac Xcode Clang Debug",
+      "inherits": "mac-build-base",
+      "configurePreset": "mac-xcode-clang",
+      "configuration": "Debug"
+    },
+    {
+      "name": "mac-xcode-clang-release",
+      "displayName": "Mac Xcode Clang Release",
+      "inherits": "mac-build-base",
+      "configurePreset": "mac-xcode-clang",
+      "configuration": "Release"
+    },
+    {
+      "name": "mac-ninja-clang-debug",
+      "displayName": "Mac Ninja Clang Debug",
+      "inherits": "mac-build-base",
+      "configurePreset": "mac-ninja-clang-debug"
+    },
+    {
+      "name": "mac-ninja-clang-release",
+      "displayName": "Mac Ninja Clang Release",
+      "inherits": "mac-build-base",
+      "configurePreset": "mac-ninja-clang-release"
+    }
+  ]
+}
