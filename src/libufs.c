@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: GPL-2.0-only
  */
 
-#include "internal.h"
+#include "vfs/ufs.h"
 
 /* Forward declarations for builtin filesystems */
 extern struct ufs_filesystem_type ufs_fat_fs_type;

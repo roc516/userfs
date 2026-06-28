@@ -8,65 +8,38 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 option(BUILD_TOOLS "Build CLI tools" ON)
 option(BUILD_SHARED "Build shared library" ON)
 
-# Sources
-set(VFS_SOURCES
-    src/vfs/block_io.c
-    src/vfs/super.c
-    src/vfs/inode.c
-    src/vfs/dentry.c
-    src/vfs/path.c
-    src/vfs/file.c
-    src/vfs/register.c
-    src/vfs/api.c
-)
+# Sub-libraries
+add_subdirectory(src/vfs)
+add_subdirectory(src/fs/fat)
 
-set(FAT_SOURCES
-    src/fat/fatent.c
-    src/fat/cache.c
-    src/fat/misc.c
-    src/fat/dir.c
-    src/fat/vfs_inode.c
-    src/fat/vfs_file.c
-    src/fat/namei.c
-    src/fat/fat_fs.c
-)
-
-set(CORE_SOURCES
-    src/libufs.c
-    ${VFS_SOURCES}
-    ${FAT_SOURCES}
-)
-
-# Include path
-include_directories(include)
-include_directories(src/vfs)
-include_directories(src/fat)
-
-# Build library
+# ---- Combined shared library ----
 if(BUILD_SHARED)
-    add_library(ufs SHARED ${CORE_SOURCES})
-    target_link_libraries(ufs pthread)
+    add_library(ufs SHARED src/libufs.c)
+    target_link_libraries(ufs PRIVATE ufs_vfs ufs_fat)
     set_target_properties(ufs PROPERTIES
-        OUTPUT_NAME ufs
         SOVERSION 1
     )
 endif()
 
-add_library(ufs_static STATIC ${CORE_SOURCES})
-target_link_libraries(ufs_static pthread)
+# ---- Combined static library (links the sub-libraries) ----
+add_library(ufs_static STATIC src/libufs.c)
+target_link_libraries(ufs_static PUBLIC ufs_vfs ufs_fat)
 set_target_properties(ufs_static PROPERTIES OUTPUT_NAME ufs)
 
 # CLI tools
 if(BUILD_TOOLS)
-    add_subdirectory(tools/fatool)
+    add_subdirectory(src/tools/fatool)
 endif()
 
 # Install
+install(TARGETS ufs_vfs ufs_fat
+    ARCHIVE DESTINATION lib
+)
 install(TARGETS ufs ufs_static
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
 )
-install(DIRECTORY include/ DESTINATION include)
+install(DIRECTORY src/vfs/include/ DESTINATION include)
 
 
 if(CMAKE_EXPORT_COMPILE_COMMANDS AND CMAKE_GENERATOR MATCHES "Ninja|Makefiles")
